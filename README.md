@@ -94,7 +94,7 @@ Saved in `artifacts/`:
 * **Team Name:** FDM Mini Project Team 2025
 * **Instructor:** [Faculty of Computing – SLIIT](https://www.sliit.lk)
 * **Team Members:**
-    * Member 1
+    * S.M.P.B.Senanayake
     * Member 2
     * Member 3
 
