@@ -1,4 +1,3 @@
-```markdown
 # FDM Mini Project 2025 – Retail Dataset Analysis & Machine Learning
 
 ## Project Overview
@@ -15,8 +14,7 @@ The project aims to demonstrate practical application of **data mining and machi
 - **Rows:** ~300,000
 - **Columns:** ~30 (Transaction_ID, Customer_ID, Amount, Order_Status, Product_Category, etc.)
 - **Format:** CSV
-- **Notes:**  
-  - Dataset contains null values and duplicates  
+- **Notes:** - Dataset contains null values and duplicates  
   - Covers retail transactions from Mar 2023 to Feb 2024  
   - Stored in `data/raw/new_retail_data.csv`  
 
@@ -24,12 +22,7 @@ The project aims to demonstrate practical application of **data mining and machi
 
 ---
 
-## Setup Instructions
-1. Clone the repository:
-```bash
-git clone https://github.com/<your-username>/fdm_mini_project_retail.git
-cd fdm_mini_project_retail
-```
+## Folder Structure
 
 2. Install dependencies:
 
