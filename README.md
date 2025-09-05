@@ -93,7 +93,10 @@ Saved in `artifacts/`:
 
 * **Team Name:** FDM Mini Project Team 2025
 * **Instructor:** [Faculty of Computing – SLIIT](https://www.sliit.lk)
-* **Team Members:** Add your names here
+* **Team Members:**
+    * Member 1
+    * Member 2
+    * Member 3
 
 ---
 
