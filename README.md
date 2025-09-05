@@ -38,7 +38,7 @@ The project aims to demonstrate practical application of **data mining and machi
 
 ### 2. Clone the Repository
 
-Open your terminal (macOS/Linux) or Git Bash (Windows) and run the following commands:
+1. Open your terminal (macOS/Linux) or Git Bash (Windows) and run the following commands:
 
 ```bash
 # Navigate to your projects directory
