@@ -21,49 +21,37 @@ The project aims to demonstrate practical application of **data mining and machi
 > **Important:** Keep `data/raw` read-only. Processed/cleaned data is saved in `data/processed/`.
 
 ---
-### 1. Download & Install PyCharm (Windows/macOS/Linux)
+## Project Setup
 
-1. Go to the [PyCharm Official Website](https://www.jetbrains.com/pycharm/download/).  
-2. Choose **Community Edition** (free) or **Professional Edition**.  
-3. Download the installer for your OS.  
-4. Run the installer and follow the setup instructions.  
-5. Launch PyCharm and configure your Python interpreter (Python 3.10+ recommended).
+### Prerequisites
+- Python 3.10 or higher
+- Git installed on your system
+- PyCharm IDE (recommended) or any Python IDE
 
-### 2. Open Terminal / Git Bash
+### 1. Download & Install PyCharm
 
-Open your terminal (macOS/Linux) or Git Bash (Windows) to run Git commands.
+1. Visit the [PyCharm Official Website](https://www.jetbrains.com/pycharm/download/)
+2. Choose **Community Edition** (free) or **Professional Edition**
+3. Download the installer for your operating system (Windows/macOS/Linux)
+4. Run the installer and follow the setup instructions
+5. Launch PyCharm and configure your Python interpreter
 
-### 3. Navigate to Your Projects Directory
+### 2. Clone the Repository
 
+Open your terminal (macOS/Linux) or Git Bash (Windows) and run the following commands:
 
+```bash
+# Navigate to your projects directory
 cd ~/projects
 
-
-
-### 4. Clone the Project Repository
-
-
-# Using HTTPS
+# Clone the repository using HTTPS
 git clone https://github.com/your-username/fdm-mini-project-2025.git
 
-# OR using SSH (if configured)
+# OR clone using SSH (if configured)
 git clone git@github.com:your-username/fdm-mini-project-2025.git
 
-
-
-### 5. Enter the Project Folder
-
-
+# Enter the project directory
 cd fdm-mini-project-2025
-
-
-
-### 6. Open Project in PyCharm
-
-1. Open PyCharm → `File → Open`.  
-2. Select the cloned folder `fdm-mini-project-2025`.  
-3. Configure the Python interpreter inside PyCharm if not auto-detected.
-
 
 2. Install dependencies:
 
