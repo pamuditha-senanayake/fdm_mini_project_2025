@@ -78,7 +78,7 @@ conda activate fdm-project
 ```
 ---
 
-## File/Folder Structure
+## Project Workflow & Notebook Execution
 
 3. Check the dataset in `data/raw/data.csv`.
 
