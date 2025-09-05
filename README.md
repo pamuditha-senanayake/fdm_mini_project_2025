@@ -56,8 +56,8 @@ cd fdm-mini-project-2025
 2. Install dependencies:
 
 ```bash
-pip install -r requirements.txt
-```
+pip install -r requirements.txt```
+
 ### 3. Open Project in PyCharm
 
 1. Open PyCharm
