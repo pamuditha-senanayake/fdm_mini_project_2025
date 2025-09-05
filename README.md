@@ -24,38 +24,12 @@ The project aims to demonstrate practical application of **data mining and machi
 
 ---
 
-## Folder Structure
-```
-
-fdm\_mini\_project\_retail/
-│
-├── data/
-│   ├── raw/                  # Original dataset CSV (read-only)
-│   ├── processed/            # Cleaned / imputed datasets (parquet or CSV)
-│   └── README.md             # Notes about data source & preprocessing
-│
-├── notebooks/                # Jupyter notebooks for different tasks
-│
-├── scripts/                  # Python scripts for automation
-│
-├── artifacts/                # Saved models, figures, outputs
-│
-├── reports/                  # SOW, final report, presentations
-│
-├── requirements.txt          # Python dependencies
-├── README.md                 # Project overview, instructions
-└── .gitignore                # Ignore artifacts, raw data, caches
-
-````
-
----
-
 ## Setup Instructions
 1. Clone the repository:
 ```bash
 git clone https://github.com/<your-username>/fdm_mini_project_retail.git
 cd fdm_mini_project_retail
-````
+```
 
 2. Install dependencies:
 
@@ -135,6 +109,4 @@ Saved in `artifacts/`:
 * Dataset: [OpenDataBay – Retail Dataset](https://www.opendatabay.com/data/consumer/327c5b3c-9f40-45bb-a79b-d5e2c9abc68a)
 * Pandas Documentation: [https://pandas.pydata.org](https://pandas.pydata.org)
 * Scikit-learn Documentation: [https://scikit-learn.org](https://scikit-learn.org)
-
-```
 ```
