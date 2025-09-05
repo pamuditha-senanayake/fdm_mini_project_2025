@@ -75,6 +75,7 @@ pip install -r requirements.txt
 conda env create -f environment.yml
 conda activate fdm-project
 
+```
 ---
 
 3. Check the dataset in `data/raw/data.csv`.
