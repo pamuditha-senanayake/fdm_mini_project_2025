@@ -78,6 +78,8 @@ conda activate fdm-project
 ```
 ---
 
+## File/Folder Structure
+
 3. Check the dataset in `data/raw/data.csv`.
 
 4. Run Jupyter notebooks in order:
