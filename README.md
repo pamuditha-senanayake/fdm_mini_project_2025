@@ -58,6 +58,24 @@ cd fdm-mini-project-2025
 ```bash
 pip install -r requirements.txt
 ```
+### 3. Open Project in PyCharm
+
+1. Open PyCharm
+2. Go to `File → Open`
+3. Select the cloned folder `fdm-mini-project-2025`
+4. Configure the Python interpreter if not automatically detected
+
+### 4. Install Dependencies
+
+```bash
+# Install required packages
+pip install -r requirements.txt
+
+# OR if using conda
+conda env create -f environment.yml
+conda activate fdm-project
+
+---
 
 3. Check the dataset in `data/raw/data.csv`.
 
