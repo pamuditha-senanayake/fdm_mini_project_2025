@@ -45,10 +45,10 @@ The project aims to demonstrate practical application of **data mining and machi
 cd ~/projects
 
 # Clone the repository using HTTPS
-git clone https://github.com/your-username/fdm-mini-project-2025.git
+git clone https://github.com/pamuditha-senanayake/fdm-mini-project-2025.git
 
 # OR clone using SSH (if configured)
-git clone git@github.com:your-username/fdm-mini-project-2025.git
+git clone git@github.com:pamuditha-senanayake/fdm-mini-project-2025.git
 
 # Enter the project directory
 cd fdm-mini-project-2025
