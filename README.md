@@ -30,7 +30,7 @@ The project aims to demonstrate practical application of **data mining and machi
 pip install -r requirements.txt
 ```
 
-3. Place the dataset in `data/raw/new_retail_data.csv`.
+3. Check the dataset in `data/raw/data.csv`.
 
 4. Run Jupyter notebooks in order:
 
