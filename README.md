@@ -21,8 +21,49 @@ The project aims to demonstrate practical application of **data mining and machi
 > **Important:** Keep `data/raw` read-only. Processed/cleaned data is saved in `data/processed/`.
 
 ---
+### 1. Download & Install PyCharm (Windows/macOS/Linux)
 
-## Folder Structure
+1. Go to the [PyCharm Official Website](https://www.jetbrains.com/pycharm/download/).  
+2. Choose **Community Edition** (free) or **Professional Edition**.  
+3. Download the installer for your OS.  
+4. Run the installer and follow the setup instructions.  
+5. Launch PyCharm and configure your Python interpreter (Python 3.10+ recommended).
+
+### 2. Open Terminal / Git Bash
+
+Open your terminal (macOS/Linux) or Git Bash (Windows) to run Git commands.
+
+### 3. Navigate to Your Projects Directory
+
+
+cd ~/projects
+
+
+
+### 4. Clone the Project Repository
+
+
+# Using HTTPS
+git clone https://github.com/your-username/fdm-mini-project-2025.git
+
+# OR using SSH (if configured)
+git clone git@github.com:your-username/fdm-mini-project-2025.git
+
+
+
+### 5. Enter the Project Folder
+
+
+cd fdm-mini-project-2025
+
+
+
+### 6. Open Project in PyCharm
+
+1. Open PyCharm → `File → Open`.  
+2. Select the cloned folder `fdm-mini-project-2025`.  
+3. Configure the Python interpreter inside PyCharm if not auto-detected.
+
 
 2. Install dependencies:
 
