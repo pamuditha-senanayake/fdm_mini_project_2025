@@ -1,0 +1,14 @@
+# netlify.toml
+
+[build]
+  # This is the directory where your build command places the built site.
+  # For Create React App, it's typically "build". For Vite, it's "dist".
+  publish = "build"
+  # The command to build your site
+  command = "npm run build"
+
+[[redirects]]
+  # This rule handles all routing
+  from = "/*"
+  to = "/index.html"
+  status = 200
