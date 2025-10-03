@@ -1,0 +1,96 @@
+/* ======================
+   Tailwind-Compatible Global Reset & Theme
+   ====================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --color-primary: #6366f1; /* Indigo */
+  --color-accent: #8b5cf6;  /* Purple */
+  --color-bg: #0a0a0f;      /* Dark background */
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-muted: #a1a1aa;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  scroll-behavior: smooth;
+}
+
+a {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s;
+  outline: none;
+}
+
+/* Utility Classes (optional) */
+.text-glow {
+  text-shadow: 0 0 8px rgba(147, 51, 234, 0.5);
+}
+
+.bg-glass {
+  background-color: rgba(31, 41, 55, 0.6); /* gray-800 / 60% */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+/* Responsive typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+input, select, textarea {
+  font-family: inherit;
+  background-color: rgba(55, 65, 81, 0.5);
+  color: white;
+  border: 1px solid rgba(99, 102, 241, 0.5);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  transition: all 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  ring: 2px;
+  border-color: #8b5cf6;
+}
+
+/* Footer styling */
+footer {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
