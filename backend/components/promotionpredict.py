@@ -1,4 +1,5 @@
 # backend/components/promotionpredict.py
+#https://colab.research.google.com/drive/14CqX81DjqB4hsiOaPriHE3Xqej7oNS4J?usp=sharing
 
 import pandas as pd
 import numpy as np
