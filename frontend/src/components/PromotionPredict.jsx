@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-// --- STYLES (for consistency with the theme) ---
+// --- STYLES ---
 
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.05);
@@ -131,7 +131,6 @@ const Output = styled.div`
 // --- COMPONENT ---
 
 function PromotionPredict({ categories, segments, shipping, payment, genders, incomes }) {
-  // State object to hold all form values, initialized with the first item from each prop
   const [form, setForm] = useState({
     product_category: categories[0] || "",
     customer_segment: segments[0] || "",
@@ -143,25 +142,27 @@ function PromotionPredict({ categories, segments, shipping, payment, genders, in
   const [result, setResult] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Single handler to update the form state based on the input's 'name' attribute
+  // Update form state
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Submit form to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setResult("Finding best promotion...");
+
+    // Normalize form values (trim whitespace)
+    const payload = {};
+    Object.keys(form).forEach(key => {
+      payload[key] = form[key].trim();
+    });
+
     try {
-      // Use the environment variable for the API URL, falling back to localhost for development
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
-      // Make the real API call to the backend with the correct payload
-      const res = await axios.post(`${API_URL}/promotion`, form);
-
-      // Set the result with the REAL data received from the backend
+      const res = await axios.post(`${API_URL}/promotion`, payload);
       setResult(res.data.recommendation);
-
     } catch (err) {
       console.error("API call failed:", err);
       setResult("Error fetching recommendation. Please ensure the backend is running and reachable.");
