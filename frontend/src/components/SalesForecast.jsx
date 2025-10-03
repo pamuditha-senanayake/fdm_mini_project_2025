@@ -13,14 +13,11 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
-  /* Add a base background color to the body in case the component doesn't fill the whole screen */
   body {
     background-color: #1a0e05;
   }
 `;
 
-// <<< MODIFIED COMPONENT
-// The background effect is now applied here
 const AppContainer = styled.div`
   font-family: 'Poppins', sans-serif;
   display: flex;
@@ -28,30 +25,22 @@ const AppContainer = styled.div`
   justify-content: center;
   min-height: 100vh;
   color: #f0f0f0;
-  overflow: hidden; /* Crucial for clipping the blurred edges */
+  overflow: hidden;
   position: relative;
-  isolation: isolate; /* Creates a new stacking context */
+  isolation: isolate;
 
-  /* This pseudo-element creates the soft, blurred background */
   &::before {
     content: '';
     position: absolute;
-    z-index: -1; /* Place it behind the blobs and form */
-    
-    /* Make it larger than the container to ensure edges are blurred */
+    z-index: -1;
     top: -50px;
     left: -50px;
     right: -50px;
     bottom: -50px;
-
-    /* The gradient is now on this element */
     background: linear-gradient(135deg, #2d1a0b, #4a2f16);
-    
-    /* The magic property that creates the soft edge effect */
     filter: blur(80px);
   }
 `;
-
 
 const move = keyframes`
   0% { transform: translate(0, 0) scale(1); }
@@ -64,7 +53,7 @@ const Blob = styled.div`
   border-radius: 50%;
   background: linear-gradient(45deg, rgba(255, 217, 102, 0.3), rgba(239, 131, 84, 0.3));
   filter: blur(100px);
-  z-index: 1; /* Sits above the blurred background but below the form */
+  z-index: 1;
   animation: ${move} 20s infinite alternate;
 `;
 
@@ -78,7 +67,7 @@ const FormContainer = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.18);
   max-width: 550px;
   width: 90%;
-  z-index: 2; /* Sits on top of everything */
+  z-index: 2;
   position: relative;
 `;
 
@@ -204,22 +193,20 @@ function SalesForecast({ categories }) {
     setIsLoading(true);
     setResult("Processing forecast...");
     try {
-      // Mock API call for demonstration
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
-      const mockData = {
-          forecast: Array.from({length: 5}, () => (Math.random() * 1000 + 500).toFixed(2)),
-          trend: "Positive growth trend detected.",
-          mae: (Math.random() * 10).toFixed(2),
-          rmse: (Math.random() * 20).toFixed(2),
-          accuracy_pct: (Math.random() * 10 + 88).toFixed(2)
-      };
-      const { forecast, trend, mae, rmse, accuracy_pct } = mockData;
+      // Use the environment variable for the API URL, falling back to localhost for development
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+      // Make the real API call to the backend
+      const res = await axios.post(`${API_URL}/forecast`, { category, steps });
+      const { forecast, trend, mae, rmse, accuracy_pct } = res.data;
+
+      // Set the result with the REAL data received from the backend
       setResult(
         `Forecast for ${category} (${steps} days):\n${forecast.join("\n")}\n\nTrend Insight: ${trend}\nMAE: ${mae}, RMSE: ${rmse}, Accuracy: ${accuracy_pct}%`
       );
     } catch (err) {
-      setResult("Error fetching forecast. Please try again.");
+      console.error("API call failed:", err); // Log the actual error for debugging
+      setResult("Error fetching forecast. Please ensure the backend is running and reachable.");
     } finally {
       setIsLoading(false);
     }

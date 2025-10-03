@@ -12,7 +12,7 @@ const FormContainer = styled.div`
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  max-width: 800px; /* Increased width for grid layout */
+  max-width: 800px;
   width: 100%;
   margin: 40px auto;
   z-index: 2;
@@ -29,11 +29,11 @@ const Title = styled.h2`
 
 const FormGrid = styled.form`
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Creates a 2-column grid */
-  gap: 1rem 1.5rem; /* Row and column gap */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1.5rem;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; /* Stack to a single column on smaller screens */
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -104,7 +104,7 @@ const Button = styled.button`
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
-  grid-column: 1 / -1; /* Makes the button span both columns */
+  grid-column: 1 / -1;
 
   &:hover {
     transform: translateY(-3px);
@@ -152,14 +152,18 @@ function PromotionPredict({ categories, segments, shipping, payment, genders, in
     setIsLoading(true);
     setResult("Finding best promotion...");
     try {
-      // Mock API call for demonstration
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      // const res = await axios.post("http://localhost:8000/promotion", form);
-      // setResult(res.data.recommendation);
-      setResult("Recommendation: Offer a '15% Off Discount Coupon' to this customer segment for their next purchase in the 'Apparel & Fashion' category. This group responds well to percentage-based incentives.");
+      // Use the environment variable for the API URL, falling back to localhost for development
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-    } catch {
-      setResult("Error fetching recommendation");
+      // Make the real API call to the backend
+      const res = await axios.post(`${API_URL}/promotion`, form);
+
+      // Set the result with the REAL data received from the backend
+      setResult(res.data.recommendation);
+
+    } catch (err) {
+      console.error("API call failed:", err); // Log the actual error for debugging
+      setResult("Error fetching recommendation. Please ensure the backend is running and reachable.");
     } finally {
         setIsLoading(false);
     }
