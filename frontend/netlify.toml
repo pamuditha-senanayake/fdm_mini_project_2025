@@ -1,6 +1,5 @@
 # Corrected netlify.toml
 
-# This section defines the build settings.
 [build]
   # Base directory: Tell Netlify your frontend code is in the 'frontend' folder.
   base = "frontend"
@@ -10,6 +9,9 @@
 
   # Command: The command to run (within the 'base' directory) to build the site.
   command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20.19.0"
 
 # This section handles the client-side routing redirect.
 [[redirects]]
