@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 import SalesForecast from "../components/SalesForecast";
+import PromotionPredict from "../components/PromotionPredict";
 
 // === STYLES ===
 
@@ -41,30 +42,21 @@ const Blob = styled.div`
   animation: ${move} 25s infinite alternate;
 `;
 
-// <<< MODIFIED COMPONENT
-// This PageWrapper now creates the soft, blurred-edge background effect.
 const PageWrapper = styled.div`
   position: relative;
   width: 100%;
-  overflow: hidden; /* Crucial to clip the blurred edges */
-  isolation: isolate; /* Creates a new stacking context to contain the z-indexed pseudo-element */
+  overflow: hidden; 
+  isolation: isolate;
 
-  /* This pseudo-element IS the new background */
   &::before {
     content: '';
     position: absolute;
-    z-index: -1; /* Places it behind all content in the PageWrapper */
-
-    /* Make it larger than the viewport to ensure edges can be blurred and clipped */
+    z-index: -1;
     top: -50px;
     left: -50px;
     right: -50px;
     bottom: -50px;
-
-    /* The gradient lives here now */
     background: linear-gradient(135deg, #4a2f16, #2d1a0b);
-
-    /* The magic property that creates the soft edge effect */
     filter: blur(80px);
   }
 `;
@@ -200,7 +192,8 @@ function MainPage() {
         <Navbar>
             <NavLink href="#home">Home</NavLink>
             <NavLink href="#stock">Forecast</NavLink>
-            <NavLink href="#insights">Audit</NavLink>
+            {/* Changed "Audit" to "Promotions" for clarity */}
+            <NavLink href="#insights">Promotions</NavLink>
         </Navbar>
 
         {/* Hero Section */}
@@ -224,13 +217,23 @@ function MainPage() {
             </SectionContent>
         </Section>
 
-        {/* Audit Section */}
+        {/* Promotion Insights Section */}
         <Section id="insights">
             <SectionContent>
-            <Title>Responsible AI Audit</Title>
-            <Subtitle>
-                Analyze the current trend data for fairness, bias, and transparency to ensure ethical AI practices.
-            </Subtitle>
+                <Title>Promotion & Customer Insights</Title>
+                <Subtitle>
+                Identify high-purchasing customers and get actionable promotion recommendations.
+                </Subtitle>
+                {categories.length > 0 && (
+                <PromotionPredict
+                    categories={["Electronics","Apparel & Fashion","Books & Media","Home Goods"]}
+                    segments={["Retail","Wholesale"]}
+                    shipping={["Standard","Express"]}
+                    payment={["Credit Card","PayPal","Cash"]}
+                    genders={["Male","Female","Other"]}
+                    incomes={["Low","Medium","High"]}
+                />
+                )}
             </SectionContent>
         </Section>
 

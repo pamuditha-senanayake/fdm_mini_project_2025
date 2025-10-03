@@ -1,22 +1,23 @@
 # backend/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from components import stockpredict
+from components import stockpredict, promotionpredict
 
 app = FastAPI()
 
-# Enable CORS for React frontend
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # replace with your frontend URL in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include router from stockpredict
+# Include routers
 app.include_router(stockpredict.router)
+app.include_router(promotionpredict.router)
 
 @app.get("/")
 def root():
-    return {"message": "RetailIQ backend is running."}
+    return {"message": "RetailIQ backend running."}
