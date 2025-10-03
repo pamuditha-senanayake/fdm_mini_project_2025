@@ -47,7 +47,7 @@ fsspec==2024.9.0
 gast==0.6.0
 gitdb==4.0.11
 GitPython==3.1.43
-gradio==5.2.0
+gradio==5.48.0
 h11==0.14.0
 h5py==3.11.0
 holidays==0.56
