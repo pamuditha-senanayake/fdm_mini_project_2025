@@ -128,10 +128,10 @@ const Output = styled.div`
   text-align: left;
 `;
 
-
 // --- COMPONENT ---
 
 function PromotionPredict({ categories, segments, shipping, payment, genders, incomes }) {
+  // State object to hold all form values, initialized with the first item from each prop
   const [form, setForm] = useState({
     product_category: categories[0] || "",
     customer_segment: segments[0] || "",
@@ -143,6 +143,7 @@ function PromotionPredict({ categories, segments, shipping, payment, genders, in
   const [result, setResult] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Single handler to update the form state based on the input's 'name' attribute
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -155,56 +156,62 @@ function PromotionPredict({ categories, segments, shipping, payment, genders, in
       // Use the environment variable for the API URL, falling back to localhost for development
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-      // Make the real API call to the backend
+      // Make the real API call to the backend with the correct payload
       const res = await axios.post(`${API_URL}/promotion`, form);
 
       // Set the result with the REAL data received from the backend
       setResult(res.data.recommendation);
 
     } catch (err) {
-      console.error("API call failed:", err); // Log the actual error for debugging
+      console.error("API call failed:", err);
       setResult("Error fetching recommendation. Please ensure the backend is running and reachable.");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <FormContainer>
-      <Title>🛒 Promotion Recommendation Engine</Title>
+      <Title>🛒 Promotion Recommendation System</Title>
       <FormGrid onSubmit={handleSubmit}>
+
+        {/* Row 1 */}
         <FormField>
-          <StyledLabel htmlFor="product-category">Product Category</StyledLabel>
+          <StyledLabel htmlFor="product_category">Product Category</StyledLabel>
           <SelectContainer>
-            <Select id="product-category" name="product_category" value={form.product_category} onChange={handleChange}>
+            <Select id="product_category" name="product_category" value={form.product_category} onChange={handleChange}>
               {categories.map(c => <option key={c} value={c}>{c}</option>)}
             </Select>
           </SelectContainer>
         </FormField>
         <FormField>
-          <StyledLabel htmlFor="customer-segment">Customer Segment</StyledLabel>
+          <StyledLabel htmlFor="customer_segment">Customer Segment</StyledLabel>
           <SelectContainer>
-            <Select id="customer-segment" name="customer_segment" value={form.customer_segment} onChange={handleChange}>
+            <Select id="customer_segment" name="customer_segment" value={form.customer_segment} onChange={handleChange}>
               {segments.map(s => <option key={s} value={s}>{s}</option>)}
             </Select>
           </SelectContainer>
         </FormField>
+
+        {/* Row 2 */}
         <FormField>
-          <StyledLabel htmlFor="shipping-method">Shipping Method</StyledLabel>
+          <StyledLabel htmlFor="shipping_method">Shipping Method</StyledLabel>
           <SelectContainer>
-            <Select id="shipping-method" name="shipping_method" value={form.shipping_method} onChange={handleChange}>
+            <Select id="shipping_method" name="shipping_method" value={form.shipping_method} onChange={handleChange}>
               {shipping.map(s => <option key={s} value={s}>{s}</option>)}
             </Select>
           </SelectContainer>
         </FormField>
         <FormField>
-          <StyledLabel htmlFor="payment-method">Payment Method</StyledLabel>
+          <StyledLabel htmlFor="payment_method">Payment Method</StyledLabel>
           <SelectContainer>
-            <Select id="payment-method" name="payment_method" value={form.payment_method} onChange={handleChange}>
+            <Select id="payment_method" name="payment_method" value={form.payment_method} onChange={handleChange}>
               {payment.map(p => <option key={p} value={p}>{p}</option>)}
             </Select>
           </SelectContainer>
         </FormField>
+
+        {/* Row 3 */}
         <FormField>
           <StyledLabel htmlFor="gender">Gender</StyledLabel>
           <SelectContainer>
@@ -222,7 +229,7 @@ function PromotionPredict({ categories, segments, shipping, payment, genders, in
           </SelectContainer>
         </FormField>
 
-        <Button type="submit" disabled={isLoading}>{isLoading ? "Analyzing..." : "Get Recommendation"}</Button>
+        <Button type="submit" disabled={isLoading}>{isLoading ? "Analyzing..." : "Predict"}</Button>
       </FormGrid>
       {result && <Output>{result}</Output>}
     </FormContainer>
