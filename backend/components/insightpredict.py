@@ -30,9 +30,9 @@ class Config:
     DATA_PATH: str = "../data.csv"
     TEST_SIZE: float = 0.2
     RANDOM_STATE: int = 42 
-    MODEL_PATH: str = "predictive_model.joblib"
-    CLUSTER_MODEL_PATH: str = "clustering_model.joblib"
-    PREPROCESSOR_PATH: str = "preprocessor.joblib"
+    MODEL_PATH: str = "backend/models/predictive_model.joblib"
+    CLUSTER_MODEL_PATH: str = "backend/models/clustering_model.joblib"
+    PREPROCESSOR_PATH: str = "backend/models/preprocessor.joblib"
     MODEL_PARAMS: dict = {
         'n_estimators': [500, 1000],
         'learning_rate': [0.01, 0.05],
