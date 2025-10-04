@@ -1,13 +1,10 @@
 # backend/main.py
-import os
-import joblib
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
 
 # from components.train_models import DataPreprocessor, ModelTrainer, Config, InsightsGenerator
-from components import stockpredict, promotionpredict
+from components import stockpredict
+from b2 import promotionpredict
 
 # -----------------------------
 # Fix paths for saved models (inside components/)
