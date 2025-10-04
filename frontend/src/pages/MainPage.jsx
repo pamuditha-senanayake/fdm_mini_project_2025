@@ -177,7 +177,7 @@ function MainPage() {
     const [categories, setCategories] = useState([]);
       useEffect(() => {
     // Fetch categories from backend or hardcode for demo
-    setCategories(["Electronics", "Sports", "Clothing"]);
+    setCategories(["Electronics", "Grocery", "Clothing", "Home Decor", "Books"]);
   }, []);
 
   return (
@@ -227,7 +227,7 @@ function MainPage() {
                 </Subtitle>
                 {categories.length > 0 && (
                 <PromotionPredict
-                    categories={["Electronics","Sports","Clothing"]}
+                    categories={["Electronics", "Grocery", "Clothing", "Home Decor", "Books"]}
                     segments={["Regular","Premium","Occasional"]}
                     shipping={["Standard","Express","Same-Day"]}
                     payment={["Credit Card","PayPal","Debit Card"]}
