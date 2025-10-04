@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+lightgbm
+matplotlib
+seaborn
+gradio
+joblib
+statsmodels
+lightgbm
+dataclasses; python_version < "3.7"

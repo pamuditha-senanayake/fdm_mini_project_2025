@@ -1,0 +1,20 @@
+# Corrected netlify.toml
+
+[build]
+  # Base directory: Tell Netlify your frontend code is in the 'frontend' folder.
+  base = "frontend"
+
+  # Publish directory: Tell Netlify that Vite builds to the 'dist' folder (relative to the base).
+  publish = "dist"
+
+  # Command: The command to run (within the 'base' directory) to build the site.
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20.19.0"
+
+# This section handles the client-side routing redirect.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
