@@ -28,7 +28,9 @@ df.drop(columns=['Date', 'Year', 'Month', 'Time'], inplace=True)
 
 # Define features (X) and target (y)
 TARGET_COL = 'Customer_Segment'
-X = df.drop(columns=[TARGET_COL])
+# Select only the 5 specified features: Name, Age, Income, Total_Purchases, Amount
+selected_features = ['Name', 'Age', 'Income', 'Total_Purchases', 'Amount']
+X = df[selected_features]
 y = df[TARGET_COL]
 
 print(f"\nCustomer Segments to Predict:\n{y.value_counts()}")
@@ -66,7 +68,8 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=y_encoded 
 )
 
-print(f"Total numerical features the model will use: {X_encoded.shape[1]} columns")
+print(f"Total features the model will use: {X_encoded.shape[1]} columns")
+print(f"Selected features: {selected_features}")
 print(f"Training Set Size (Model Learning): {len(X_train)} records")
 print("-" * 50)
 
@@ -125,20 +128,20 @@ f1_weighted = f1_score(y_train, y_pred, average='weighted')
 importances = rf_classifier.feature_importances_
 feature_names = X_encoded.columns
 feature_importance_df = pd.DataFrame({'feature': feature_names, 'importance': importances})
-feature_importance_df = feature_importance_df.sort_values(by='importance', ascending=False).head(10)
+feature_importance_df = feature_importance_df.sort_values(by='importance', ascending=False)
 
 # Visualization
 plt.figure(figsize=(10, 6))
 plt.barh(feature_importance_df['feature'], feature_importance_df['importance'], color='#1f77b4')
 plt.xlabel('Feature Importance Score (Higher = More Predictive)')
-plt.title('Top 10 Factors That Determine Customer Segment')
+plt.title('Feature Importance for Customer Segment Prediction')
 plt.gca().invert_yaxis()
 plt.tight_layout()
 plt.savefig('customer_segment_feature_importance.png')
 plt.show()
 
 #Print Outputs 
-print("\n--- Model Insight: Top 10 Factors That Predict Customer Segment ---")
+print("\n--- Model Insight: Feature Importance for Customer Segment Prediction ---")
 print("The higher the score, the more that factor influences the customer's segment:")
 print(feature_importance_df.to_string(index=False))
 
