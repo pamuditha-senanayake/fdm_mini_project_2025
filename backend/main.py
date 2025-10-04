@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # from components.train_models import DataPreprocessor, ModelTrainer, Config, InsightsGenerator
 from components import stockpredict
-from b2 import promotionpredict
+# from b2 import promotionpredict
 
 # -----------------------------
 # Fix paths for saved models (inside components/)
@@ -29,7 +29,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(stockpredict.router)
-app.include_router(promotionpredict.router)
+# app.include_router(promotionpredict.router)
 
 # -----------------------------
 # Load or Train Models
