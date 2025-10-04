@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 import SalesForecast from "../components/SalesForecast";
 import PromotionPredict from "../components/PromotionPredict";
-
+import CustomerInsights from "../components/CustomerInsights";
 // === STYLES ===
 
 const GlobalStyle = createGlobalStyle`
@@ -238,6 +238,16 @@ function MainPage() {
             </SectionContent>
         </Section>
 
+
+          <Section id="audit">
+            <SectionContent>
+                <Title>Comprehensive Business Audit</Title>
+                <Subtitle>
+                  Generate a complete overview of model performance, descriptive analytics, and customer segmentation insights with a single click.
+                </Subtitle>
+                <CustomerInsights />
+            </SectionContent>
+        </Section>
       </PageWrapper>
     </>
   );
