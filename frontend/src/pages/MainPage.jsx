@@ -4,6 +4,7 @@ import styled, { createGlobalStyle, keyframes } from "styled-components";
 import SalesForecast from "../components/SalesForecast";
 import PromotionPredict from "../components/PromotionPredict";
 import CustomerInsights from "../components/CustomerInsights";
+import SegmentPredictor from "../components/SegmentPredictor";
 // === STYLES ===
 
 const GlobalStyle = createGlobalStyle`
@@ -174,12 +175,18 @@ const Subtitle = styled.p`
 
 // ===== MainPage Component =====
 function MainPage() {
-    const [categories, setCategories] = useState([]);
-      useEffect(() => {
-    // Fetch categories from backend or hardcode for demo
+  const [categories, setCategories] = useState([]);
+
+  // Define dropdown lists
+  const incomeLevels = ["Low", "Medium", "High"];
+  const segments = ["Regular", "Premium", "Occasional"];
+  const shipping = ["Standard", "Express", "Same-Day"];
+  const payment = ["Credit Card", "PayPal", "Debit Card"];
+  const genders = ["Male", "Female"];
+
+  useEffect(() => {
     setCategories(["Electronics", "Grocery", "Clothing", "Home Decor", "Books"]);
   }, []);
-
   return (
     <>
       <GlobalStyle />
@@ -195,6 +202,7 @@ function MainPage() {
             <NavLink href="#stock">Forecast</NavLink>
             {/* Changed "Audit" to "Promotions" for clarity */}
             <NavLink href="#insights">Promotions</NavLink>
+            <NavLink href="#segmentation">Segmentation</NavLink>
         </Navbar>
 
         {/* Hero Section */}
@@ -239,6 +247,7 @@ function MainPage() {
         </Section>
 
 
+
           <Section id="audit">
             <SectionContent>
                 <Title>Comprehensive Business Audit</Title>
@@ -246,6 +255,14 @@ function MainPage() {
                   Generate a complete overview of model performance, descriptive analytics, and customer segmentation insights with a single click.
                 </Subtitle>
                 <CustomerInsights />
+            </SectionContent>
+        </Section>
+
+          <Section id="segmentation">
+            <SectionContent>
+                <Title>Live Customer Segmentation</Title>
+                <Subtitle>Enter customer details to predict their segment and receive targeted marketing recommendations in real-time.</Subtitle>
+                <SegmentPredictor incomeLevels={incomeLevels} />
             </SectionContent>
         </Section>
       </PageWrapper>

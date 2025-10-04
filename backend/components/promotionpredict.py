@@ -7,9 +7,6 @@ from pydantic import BaseModel
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-# -----------------------------
-# Load dataset
-# -----------------------------
 df = pd.read_csv("data.csv")
 df = df[['Product_Category', 'Customer_Segment', 'Shipping_Method', 'Payment_Method',
          'Gender', 'Income', 'Total_Purchases']]

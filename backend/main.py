@@ -7,7 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
 
 from components.train_models import DataPreprocessor, ModelTrainer, Config, InsightsGenerator
-from components import stockpredict, promotionpredict
+from components import stockpredict, promotionpredict, segmentpredict
+from fastapi import Body
+import numpy as np
+import math
 
 # -----------------------------
 # Fix paths for saved models (inside components/)
@@ -16,6 +19,20 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 Config.MODEL_PATH = os.path.join(BASE_DIR, "components", "predictive_model.joblib")
 Config.CLUSTER_MODEL_PATH = os.path.join(BASE_DIR, "components", "clustering_model.joblib")
 Config.DATA_PATH = os.path.join(BASE_DIR, "components", "..", "data.csv")  # adjust if needed
+
+# -----------------------------
+# Utility: Clean NaN / inf floats for JSON
+# -----------------------------
+def clean_json_floats(obj):
+    if isinstance(obj, dict):
+        return {k: clean_json_floats(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [clean_json_floats(i) for i in obj]
+    elif isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None  # or 0.0 if you prefer
+        return obj
+    return obj
 
 # -----------------------------
 # FastAPI Setup
@@ -96,11 +113,11 @@ def get_comprehensive_insights():
         descriptive_insights = insights_gen.generate_descriptive_insights()
         segmentation_insights = insights_gen.generate_segmentation_insights()
 
-        return {
+        return clean_json_floats({
             "metrics": metrics_text,
             "descriptive": descriptive_insights,
             "segmentation": segmentation_insights
-        }
+        })
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
@@ -111,6 +128,31 @@ def get_comprehensive_insights():
 @app.get("/")
 def root():
     return {"message": "RetailIQ backend is running."}
+
+@app.on_event("startup")
+def load_models_on_startup():
+    # Train or load the customer segmentation model at startup
+    segmentpredict.load_and_train_segment_model()
+
+@app.post("/api/predict-segment")
+async def predict_segment(data: dict = Body(...)):
+    try:
+        age = data.get("age")
+        income = data.get("income")
+        total_purchases = data.get("total_purchases")
+        amount = data.get("amount")
+
+        if None in [age, income, total_purchases, amount]:
+            raise HTTPException(status_code=400, detail="Missing one or more required fields")
+
+        result = segmentpredict.predict_segment(age, income, total_purchases, amount)
+
+        # ✅ sanitize NaN/inf before returning
+        return clean_json_floats(result)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # -----------------------------
 # Run server
