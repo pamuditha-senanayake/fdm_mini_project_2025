@@ -8,4 +8,6 @@ matplotlib
 seaborn
 gradio
 joblib
+statsmodels
+lightgbm
 dataclasses; python_version < "3.7"
