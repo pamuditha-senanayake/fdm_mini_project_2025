@@ -28,8 +28,8 @@ df.drop(columns=['Date', 'Year', 'Month', 'Time'], inplace=True)
 
 # Define features (X) and target (y)
 TARGET_COL = 'Customer_Segment'
-# Select only the 5 specified features: Name, Age, Income, Total_Purchases, Amount
-selected_features = ['Name', 'Age', 'Income', 'Total_Purchases', 'Amount']
+# Select only the 4 specified features: Age, Income, Total_Purchases, Amount
+selected_features = ['Age', 'Income', 'Total_Purchases', 'Amount']
 X = df[selected_features]
 y = df[TARGET_COL]
 
@@ -182,11 +182,189 @@ print("Total customers evaluated:", len(predicted_series))
 print("\nPredicted segment distribution (count | %):")
 for seg, cnt in segment_counts.items():
     pct = segment_percentages.loc[seg]
-    print(f" - {seg}: {cnt} | {pct}%")
+    if seg == "Premium":
+        seg_display = "Premium customers"
+    elif seg == "Regular":
+        seg_display = "Regular customers"
+    else:  # Occasional
+        seg_display = "Occasional customers"
+    print(f" - {seg_display}: {cnt} | {pct}%")
 
 print("\nWhat to do with each segment:")
-print(" - Premium: Offer VIP perks, early access, and premium bundles to increase AOV.")
-print(" - Regular: Encourage subscriptions and bundles to lift repeat purchases.")
-print(" - Occasional: Use reactivation offers and reminders to bring them back.")
+print(" - Premium customers: Offer VIP perks, early access, and premium bundles to increase AOV.")
+print(" - Regular customers: Encourage subscriptions and bundles to lift repeat purchases.")
+print(" - Occasional customers: Use reactivation offers and reminders to bring them back.")
 
 print("-" * 50)
+
+
+# 6. Interactive Keyboard Input for Customer Segment Prediction
+# ====================================================================
+
+def get_customer_input():
+    """
+    Get customer details through keyboard input
+    """
+    print("\n--- 6. Interactive Customer Segment Prediction ---")
+    print("Enter customer details to predict their segment:")
+    print("=" * 60)
+    
+    # Get unique income levels for validation
+    unique_incomes = df['Income'].dropna().astype(str).unique().tolist()
+    unique_incomes = sorted(unique_incomes)
+    
+    while True:
+        try:
+            # Get age
+            while True:
+                try:
+                    age = int(input("Enter age (18-100): "))
+                    if 18 <= age <= 100:
+                        break
+                    else:
+                        print("Error: Age must be between 18 and 100. Please try again.")
+                except ValueError:
+                    print("Error: Please enter a valid number for age.")
+            
+            # Get income level
+            print(f"\nAvailable income levels: {', '.join(unique_incomes)}")
+            while True:
+                income = input("Enter income level: ").strip()
+                if income in unique_incomes:
+                    break
+                else:
+                    print(f"Error: Please enter one of the valid income levels: {', '.join(unique_incomes)}")
+            
+            # Get total purchases
+            while True:
+                try:
+                    total_purchases = int(input("Enter total purchases (0 or more): "))
+                    if total_purchases >= 0:
+                        break
+                    else:
+                        print("Error: Total purchases must be 0 or more. Please try again.")
+                except ValueError:
+                    print("Error: Please enter a valid number for total purchases.")
+            
+            # Get amount
+            while True:
+                try:
+                    amount = float(input("Enter total amount (0 or more): "))
+                    if amount >= 0:
+                        break
+                    else:
+                        print("Error: Amount must be 0 or more. Please try again.")
+                except ValueError:
+                    print("Error: Please enter a valid number for amount.")
+            
+            return age, income, total_purchases, amount
+            
+        except KeyboardInterrupt:
+            print("\n\nExiting...")
+            return None, None, None, None
+
+def predict_customer_segment_interactive(age, income, total_purchases, amount):
+    """
+    Predict customer segment based on input features
+    """
+    try:
+        # Create input data
+        input_data = pd.DataFrame({
+            'Age': [int(age)],
+            'Income': [str(income)],
+            'Total_Purchases': [int(total_purchases)],
+            'Amount': [float(amount)]
+        })
+        
+        # Encode categorical features using the same encoders as training
+        input_data['Income'] = LabelEncoder().fit_transform(input_data['Income'])
+        
+        # Make prediction
+        prediction = rf_classifier.predict(input_data)[0]
+        prediction_label = le.inverse_transform([prediction])[0]
+        
+        # Get prediction probabilities
+        probabilities = rf_classifier.predict_proba(input_data)[0]
+        prob_dict = dict(zip(le.classes_, probabilities))
+        
+        # Format output
+        print("\n" + "="*60)
+        print("CUSTOMER SEGMENT PREDICTION RESULT")
+        print("="*60)
+        print(f"Age: {age}")
+        print(f"Income: {income}")
+
+        print(f"Total Purchases: {total_purchases}")
+        print(f"Amount: ${amount:.2f}")
+        print("-"*60)
+        # Format the prediction label to include "customers"
+        if prediction_label == "Premium":
+            display_label = "Premium customers"
+        elif prediction_label == "Regular":
+            display_label = "Regular customers"
+        else:  # Occasional
+            display_label = "Occasional customers"
+        
+        print(f" PREDICTED SEGMENT: {display_label.upper()}")
+        print("-"*60)
+        
+        print("\n PREDICTION CONFIDENCE:")
+        for segment, prob in prob_dict.items():
+            if segment == "Premium":
+                segment_display = "Premium customers"
+            elif segment == "Regular":
+                segment_display = "Regular customers"
+            else:  # Occasional
+                segment_display = "Occasional customers"
+            print(f"   {segment_display}: {prob:.2%}")
+        
+        print(f"\n MARKETING RECOMMENDATION:")
+        if prediction_label == "Premium":
+            print("   Offer VIP perks, early access, and premium bundles to increase AOV.")
+        elif prediction_label == "Regular":
+            print("   Encourage subscriptions and bundles to lift repeat purchases.")
+        else:  # Occasional
+            print("   Use reactivation offers and reminders to bring them back.")
+        
+        print("="*60)
+        
+        return prediction_label, prob_dict
+        
+    except Exception as e:
+        print(f"\n Error in prediction: {str(e)}")
+        return None, None
+
+def run_interactive_prediction():
+    """
+    Run the interactive prediction interface
+    """
+    print("Welcome to Customer Segment Prediction Tool!")
+    print("This tool will help you predict if a customer is Premium customers, Regular customers, or Occasional customers.")
+    
+    while True:
+        # Get customer input
+        age, income, total_purchases, amount = get_customer_input()
+        
+        if age is None:  # User pressed Ctrl+C
+            break
+        
+        # Make prediction
+        prediction, probabilities = predict_customer_segment_interactive(
+            age, income, total_purchases, amount
+        )
+        
+        # Ask if user wants to predict another customer
+        while True:
+            continue_prediction = input("\nWould you like to predict another customer? (y/n): ").strip().lower()
+            if continue_prediction in ['y', 'yes', 'n', 'no']:
+                break
+            else:
+                print("Please enter 'y' for yes or 'n' for no.")
+        
+        if continue_prediction in ['n', 'no']:
+            print("\nThank you for using the Customer Segment Prediction Tool!")
+            break
+
+# Run the interactive prediction if this script is executed directly
+if __name__ == "__main__":
+    run_interactive_prediction()
