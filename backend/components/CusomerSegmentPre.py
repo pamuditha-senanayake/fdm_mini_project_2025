@@ -10,7 +10,7 @@ import gradio as gr
 
 
 # 1. Setup and Data Preparation
-# ====================================================================
+
 
 # Load the customer transaction data
 csv_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data.csv'))
@@ -39,7 +39,7 @@ print("-" * 50)
 
 
 # 2. Feature Engineering and Data Splitting
-# ====================================================================
+
 
 print("--- 2. Feature Engineering: Preparing Data for the Model ---")
 
@@ -74,7 +74,6 @@ print("-" * 50)
 
 
 # 3. Model Training, Evaluation, and Visualization
-# ====================================================================
 
 rf_classifier = RandomForestClassifier(
     n_estimators=500,
@@ -117,7 +116,7 @@ if adjusted_accuracy < 0.80:
 accuracy = accuracy_score(y_train, y_pred)
 f1_weighted = f1_score(y_train, y_pred, average='weighted')
 
-# --- Feature Importance ---
+#Feature Importance 
 importances = rf_classifier.feature_importances_
 feature_names = X_encoded.columns
 feature_importance_df = pd.DataFrame({'feature': feature_names, 'importance': importances})
@@ -138,7 +137,7 @@ print(feature_importance_df.to_string(index=False))
 
 
 # 4. Final Accuracy
-# ====================================================================
+
 
 print("--- 4. Final Model Performance Check ---")
 print(f"\n1. Model Accuracy Score: {accuracy:.4f} ({accuracy*100:.2f}%)")
@@ -148,7 +147,7 @@ print("-" * 50)
 
 
 # 5. Gradio UI
-# ====================================================================
+
 
 def predict_customer_segment_ui(age, income, total_purchases, amount):
     try:
