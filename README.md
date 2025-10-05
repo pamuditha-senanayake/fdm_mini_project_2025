@@ -16,7 +16,7 @@ RetailIQ is a retail analytics platform that predicts customer behavior, forecas
 
 * Backend: FastAPI, Python, LightGBM, RandomForest, SARIMAX, pandas, numpy
 * Frontend: React (Netlify)
-* Database: CSV prototype
+* Database: CSV
 * Deployment: Render (backend), Netlify (frontend)
 
 ## Folder Structure
