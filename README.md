@@ -85,8 +85,8 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ## Authors / Team
 
-* [Your Team Members]
-* Submission: Batch & Group Leader IT number
+* S.M.P.B.Senanayake, W.M.I.U. Weerakoon, A.G.I.A.Dissanayake , K.M A.U.Kulathunga
+
 
 ## Notes
 
