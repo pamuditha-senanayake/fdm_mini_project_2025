@@ -38,6 +38,7 @@ RetailIQ/
 │   │   ├── CustomerInsights.jsx
 │   │   └── SegmentPredictor.jsx
 │   └── package.json
+|   |__ MainPage.jsx
 ├── README.md
 ├── Final_Report.pdf
 └── Presentation.mp4
