@@ -33,7 +33,7 @@ class Config:
     ]
     CLUSTER_FEATURES: List[str] = ['Age', 'Income', 'Total_Purchases', 'Ratings', 'Amount', 'Total_Amount']
     MODEL_PARAMS: dict = {
-        'n_estimators': [200, 500],
+        'n_estimators': [100, 150],
         'learning_rate': [0.01, 0.05],
         'max_depth': [3, 5, 7],
         'num_leaves': [15, 31, 63]

@@ -52,10 +52,14 @@ def load_and_train_segment_model():
 
     # Train RandomForest
     rf_classifier = RandomForestClassifier(
-        n_estimators=500,
+        n_estimators=100,  # reduce from 500 → 100
+        max_depth=10,  # limit depth
+        min_samples_split=5,  # avoid tiny branches
         random_state=42,
-        class_weight="balanced"
+        class_weight="balanced",
+        n_jobs=-1  # use parallel cores
     )
+
     rf_classifier.fit(X_train, y_train)
 
     # Save model + encoder
@@ -107,3 +111,6 @@ def predict_segment(age: int, income: str, total_purchases: int, amount: float):
         "probabilities": safe_prob_dict,
         "recommendation": recommendation
     }
+if __name__ == "__main__":
+    load_and_train_segment_model()
+    print("✅ Segment model trained and saved successfully.")

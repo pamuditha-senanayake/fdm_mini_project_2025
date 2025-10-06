@@ -59,7 +59,7 @@ for col in categorical_cols:
 # Train LightGBM model
 # -----------------------------
 model = lgb.LGBMClassifier(
-    n_estimators=500,
+    n_estimators=200,
     learning_rate=0.05,
     max_depth=10,
     num_leaves=64,
@@ -78,7 +78,7 @@ rec = recall_score(y_test, y_pred)
 f1 = f1_score(y_test, y_pred)
 
 print("✅ Model trained to classify High Purchasers")
-print(f"Accuracy: {acc*100:.2f}% | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1 Score: {f1*100:.2f}%")
+print(f"Accuracy 2A: {acc*100:.2f}% | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1 Score: {f1*100:.2f}%")
 
 # -----------------------------
 # FastAPI router
@@ -116,4 +116,4 @@ def predict_purchase(req: PromotionRequest):
     if pred == 1:
         return {"recommendation": f"🟢 Likely High Purchaser (prob={proba:.2f}) → No urgent promotion needed."}
     else:
-        return {"recommendation": f"🔴 Low Purchaser (prob={proba:.2f}) → Consider promotion."}
+        return {"recommendation": f"🔴 Low Purchaser  → Consider promotion."}
