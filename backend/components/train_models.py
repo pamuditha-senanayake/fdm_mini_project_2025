@@ -215,7 +215,7 @@ from typing import List, Dict
 # Configuration
 # -----------------------------
 class Config:
-    DATA_PATH: str = "../data.csv"
+    DATA_PATH: str = "../../reports/data.csv"
     MODEL_PATH: str = "predictive_model.joblib"
     CLUSTER_MODEL_PATH: str = "clustering_model.joblib"
     PREPROCESSOR_PATH: str = "preprocessor.joblib"
