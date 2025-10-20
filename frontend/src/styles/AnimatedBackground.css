@@ -1,0 +1,39 @@
+@keyframes moveBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(40vw, 20vh) scale(1.2); }
+  50% { transform: translate(-35vw, 40vh) scale(0.9); }
+  75% { transform: translate(30vw, -15vh) scale(1.1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes rotateBlob {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.background-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: #fffde7;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
+  top: var(--top);
+  left: var(--left);
+  background: radial-gradient(circle at center, var(--color1) 0%, var(--color2) 100%);
+  animation:
+    moveBlob var(--duration) infinite alternate ease-in-out,
+    rotateBlob var(--rotateDuration) infinite linear;
+  box-shadow: 0 0 180px 60px var(--color1);
+  filter: blur(80px);
+  transform-origin: center;
+}
