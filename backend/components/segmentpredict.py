@@ -61,7 +61,8 @@ def load_and_train_segment_model():
     f1 = f1_score(y_test, y_pred, average="weighted", zero_division=0)
     cm = confusion_matrix(y_test, y_pred)
 
-    print("\n=== Model Evaluation Metrics ===\n")
+    print("\nMetrics for : Customer Segment Prediction Tool")
+    print("=== Press Detected for Prediction ===\n")
     print(f"Accuracy      : {acc:.4f}")
     print(f"Weighted F1   : {f1:.4f}")
     print("Confusion Matrix:")

@@ -7,8 +7,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
 
 from components.train_models import DataPreprocessor, ModelTrainer, Config, InsightsGenerator
-from components import stockpredict, promotionpredict, segmentpredict
+from components import stockpredict, segmentpredict
 from components import form_component
+from components import promotionpredict
 from fastapi import Body
 import numpy as np
 import math
@@ -44,6 +45,7 @@ app.add_middleware(
 # Include routers
 app.include_router(stockpredict.router)
 app.include_router(promotionpredict.router)
+
 app.include_router(form_component.router)
 
 def get_or_train_models():
@@ -138,6 +140,7 @@ async def predict_segment(data: dict = Body(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 
 if __name__ == "__main__":
