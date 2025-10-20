@@ -53,14 +53,14 @@ def get_or_train_models():
         cluster_model = joblib.load(Config.CLUSTER_MODEL_PATH)
         return model, cluster_model
 
-    # Train models if missing
+
     preprocessor = DataPreprocessor()
     X, y = preprocessor.load_and_preprocess()
     trainer = ModelTrainer(preprocessor)
     trainer.train_predictive_model()
     trainer.train_clustering_model()
 
-    # Save models
+
     joblib.dump(trainer.model, Config.MODEL_PATH)
     joblib.dump(trainer.cluster_model, Config.CLUSTER_MODEL_PATH)
 
@@ -72,10 +72,10 @@ def get_comprehensive_insights():
         preprocessor = DataPreprocessor()
         X, y = preprocessor.load_and_preprocess()
 
-        # Load or train models
+
         model, cluster_model = get_or_train_models()
 
-        # Predictive metrics
+
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=Config.TEST_SIZE, random_state=Config.RANDOM_STATE
         )
@@ -88,11 +88,11 @@ def get_comprehensive_insights():
         metrics_text = (f"**Model Performance:** Accuracy = {metrics['accuracy']*100:.2f}%, "
                         f"R² = {metrics['r2']:.3f}, MAE = {metrics['mae']:.3f}")
 
-        # Cluster predictions
+
         cluster_data = preprocessor.get_cluster_data()
         cluster_labels = cluster_model.predict(cluster_data)
 
-        # Generate insights
+
         trainer = ModelTrainer(preprocessor)
         trainer.model = model
         trainer.cluster_model = cluster_model
@@ -115,10 +115,10 @@ def get_comprehensive_insights():
 def root():
     return {"message": "RetailIQ backend is running."}
 
-@app.on_event("startup")
-def load_models_on_startup():
-    # Train or load the customer segmentation model at startup
-    segmentpredict.load_and_train_segment_model()
+# @app.on_event("startup")
+# def load_models_on_startup():
+#
+#     segmentpredict.load_and_train_segment_model()
 
 @app.post("/api/predict-segment")
 async def predict_segment(data: dict = Body(...)):
@@ -133,7 +133,7 @@ async def predict_segment(data: dict = Body(...)):
 
         result = segmentpredict.predict_segment(age, income, total_purchases, amount)
 
-        # ✅ sanitize NaN/inf before returning
+
         return clean_json_floats(result)
 
     except Exception as e:

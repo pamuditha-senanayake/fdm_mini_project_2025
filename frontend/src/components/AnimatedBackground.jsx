@@ -9,7 +9,7 @@ const AnimatedBackground = () => {
         style={{
           "--size": "400px",
           "--duration": "18s",
-          "--rotateDuration": "35s",
+          "--rotateDuration": "15s",
           "--color1": "#fffacd",
           "--color2": "#ffffff",
           top: "10%",

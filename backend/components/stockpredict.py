@@ -51,9 +51,20 @@ def forecast_sales(request: ForecastRequest):
     output_text = {
         "forecast": forecast_list,
         "trend": trend_text,
-        "mae": round(mae, 2),
-        "rmse": round(rmse, 2),
-        "accuracy_pct": round(accuracy_pct, 2)
+        # "mae": round(mae, 2),
+        # "rmse": round(rmse, 2),
+        # "accuracy_pct": round(accuracy_pct, 2)
     }
+
+    print("\nMetrics for : Sales Forecast Dashboard")
+    print("=== Press Detected for Forecast ===\n")
+
+
+    print(
+        f"MAE          : {round(mae, 2)}\n"
+        f"RMSE         : {round(rmse, 2)}\n"
+        f"Accuracy (%) : {round(accuracy_pct, 2)}"
+    )
+    print("\n===============================\n")
 
     return output_text

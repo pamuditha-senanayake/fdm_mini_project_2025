@@ -16,11 +16,17 @@ function SalesForecast({ categories }) {
       const API_URL = "http://localhost:8000";
       const res = await axios.post(`${API_URL}/forecast`, { category, steps });
       const { forecast, trend, mae, rmse, accuracy_pct } = res.data;
+
+
       setResult(
         `Forecast for ${category} (${steps} days):\n${forecast.join(
           "\n"
-        )}\n\nTrend Insight: ${trend}\nMAE: ${mae}, RMSE: ${rmse}, Accuracy: ${accuracy_pct}%`
+        )}
+          \n\nTrend Insight: ${trend}\n `
+          // MAE: ${mae}, RMSE: ${rmse}, Accuracy: ${accuracy_pct}%`
       );
+
+
     } catch (err) {
       console.error("API call failed:", err);
       setResult(
@@ -84,7 +90,12 @@ function SalesForecast({ categories }) {
           </button>
         </form>
 
-        {result && <div className="output">{result}</div>}
+        {result &&
+            <div className="output">
+                {result}
+            </div>
+        }
+
       </div>
     </div>
   );
