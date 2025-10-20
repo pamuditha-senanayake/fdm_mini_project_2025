@@ -15,9 +15,7 @@ df = df[['Product_Category', 'Customer_Segment', 'Shipping_Method', 'Payment_Met
 df['High_Purchase'] = (df['Total_Purchases'] >= 3).astype(int)
 df = df.drop(columns=['Total_Purchases'])
 
-# -----------------------------
-# Handle imbalance (add noise + oversample)
-# -----------------------------
+
 low = df[df['High_Purchase'] == 0]
 high = df[df['High_Purchase'] == 1]
 
@@ -35,9 +33,7 @@ df_balanced = df_balanced.sample(frac=1, random_state=42).reset_index(drop=True)
 # Add a small noise column to encourage diversity
 df_balanced['Random_Noise'] = np.random.randn(len(df_balanced))
 
-# -----------------------------
-# Split features & target
-# -----------------------------
+
 X = df_balanced.drop(columns=['High_Purchase'])
 y = df_balanced['High_Purchase']
 
@@ -48,29 +44,23 @@ X_train, X_test, y_train, y_test = train_test_split(
 categorical_cols = ['Product_Category', 'Customer_Segment', 'Shipping_Method',
                     'Payment_Method', 'Gender', 'Income']
 
-# Convert categorical columns to category dtype
+
 category_maps = {}
 for col in categorical_cols:
     X_train[col] = X_train[col].astype('category')
     X_test[col] = X_test[col].astype('category')
     category_maps[col] = X_train[col].cat.categories.tolist()
 
-# -----------------------------
-# Train LightGBM model
-# -----------------------------
 model = lgb.LGBMClassifier(
     n_estimators=200,
     learning_rate=0.05,
     max_depth=10,
     num_leaves=64,
     random_state=42,
-    is_unbalance=False  # we already balanced manually
+    is_unbalance=False
 )
 model.fit(X_train, y_train, categorical_feature=categorical_cols)
 
-# -----------------------------
-# Evaluate
-# -----------------------------
 y_pred = model.predict(X_test)
 acc = accuracy_score(y_test, y_pred)
 prec = precision_score(y_test, y_pred)
@@ -80,9 +70,6 @@ f1 = f1_score(y_test, y_pred)
 print("✅ Model trained to classify High Purchasers")
 print(f"Accuracy 2A: {acc*100:.2f}% | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1 Score: {f1*100:.2f}%")
 
-# -----------------------------
-# FastAPI router
-# -----------------------------
 router = APIRouter()
 
 class PromotionRequest(BaseModel):
@@ -100,17 +87,17 @@ def predict_purchase(req: PromotionRequest):
                          req.payment_method, req.gender, req.income, 0.0]],  # noise placeholder
                        columns=X.columns)
 
-    # Replace unseen categories with "Other"
+
     for col in categorical_cols:
         if row[col][0] not in category_maps[col]:
             row[col] = "Other"
         row[col] = pd.Categorical(row[col], categories=category_maps[col] + ["Other"])
 
-    # Add random noise for prediction
+
     row['Random_Noise'] = np.random.randn(1)
 
-    # Predict probabilities
-    proba = model.predict_proba(row)[0][1]  # probability of High Purchaser
+
+    proba = model.predict_proba(row)[0][1]
     pred = int(proba >= 0.5)
 
     if pred == 1:

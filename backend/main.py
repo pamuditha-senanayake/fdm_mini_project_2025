@@ -8,21 +8,17 @@ from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
 
 from components.train_models import DataPreprocessor, ModelTrainer, Config, InsightsGenerator
 from components import stockpredict, promotionpredict, segmentpredict
+from components import form_component
 from fastapi import Body
 import numpy as np
 import math
 
-# -----------------------------
-# Fix paths for saved models (inside components/)
-# -----------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 Config.MODEL_PATH = os.path.join(BASE_DIR, "components", "predictive_model.joblib")
 Config.CLUSTER_MODEL_PATH = os.path.join(BASE_DIR, "components", "clustering_model.joblib")
 Config.DATA_PATH = os.path.join(BASE_DIR, "components", "..", "data.csv")  # adjust if needed
 
-# -----------------------------
-# Utility: Clean NaN / inf floats for JSON
-# -----------------------------
+
 def clean_json_floats(obj):
     if isinstance(obj, dict):
         return {k: clean_json_floats(v) for k, v in obj.items()}
@@ -30,18 +26,16 @@ def clean_json_floats(obj):
         return [clean_json_floats(i) for i in obj]
     elif isinstance(obj, float):
         if math.isnan(obj) or math.isinf(obj):
-            return None  # or 0.0 if you prefer
+            return None
         return obj
     return obj
 
-# -----------------------------
-# FastAPI Setup
-# -----------------------------
+
 app = FastAPI(title="RetailIQ Insights API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # restrict in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,12 +44,10 @@ app.add_middleware(
 # Include routers
 app.include_router(stockpredict.router)
 app.include_router(promotionpredict.router)
+app.include_router(form_component.router)
 
-# -----------------------------
-# Load or Train Models
-# -----------------------------
 def get_or_train_models():
-    """Load existing models or train new ones if missing."""
+
     if os.path.exists(Config.MODEL_PATH) and os.path.exists(Config.CLUSTER_MODEL_PATH):
         model = joblib.load(Config.MODEL_PATH)
         cluster_model = joblib.load(Config.CLUSTER_MODEL_PATH)
@@ -74,9 +66,6 @@ def get_or_train_models():
 
     return trainer.model, trainer.cluster_model
 
-# -----------------------------
-# API Endpoint
-# -----------------------------
 @app.get("/insights")
 def get_comprehensive_insights():
     try:
@@ -122,9 +111,6 @@ def get_comprehensive_insights():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
 
-# -----------------------------
-# Health Check
-# -----------------------------
 @app.get("/")
 def root():
     return {"message": "RetailIQ backend is running."}
@@ -154,9 +140,6 @@ async def predict_segment(data: dict = Body(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# -----------------------------
-# Run server
-# -----------------------------
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

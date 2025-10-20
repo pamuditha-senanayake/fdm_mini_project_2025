@@ -211,9 +211,6 @@ import os
 from pathlib import Path
 from typing import List, Dict
 
-# -----------------------------
-# Configuration
-# -----------------------------
 class Config:
     DATA_PATH: str = "../../reports/data.csv"
     MODEL_PATH: str = "predictive_model.joblib"
@@ -239,9 +236,6 @@ class Config:
         'num_leaves': [15, 31, 63]
     }
 
-# -----------------------------
-# Preprocessor
-# -----------------------------
 class DataPreprocessor:
     def __init__(self):
         self.category_mappings: Dict[str, Dict] = {}
@@ -257,26 +251,26 @@ class DataPreprocessor:
 
         df = pd.read_csv(Config.DATA_PATH)
 
-        # Fill missing values
+
         for col in df.columns:
             if df[col].dtype in ['int64','float64']:
                 df[col] = df[col].fillna(df[col].mean())
             elif col in Config.CATEGORICAL_COLUMNS:
                 df[col] = df[col].fillna(df[col].mode()[0])
 
-        # Time features
+
         df['Time'] = df.get('Time', '00:00:00').replace('######', pd.NaT)
         df['Hour'] = pd.to_datetime(df['Time'], errors='coerce').dt.hour
         df['Hour'] = df['Hour'].fillna(df['Hour'].mean())
 
-        # Encode categorical
+
         for col in Config.CATEGORICAL_COLUMNS:
             df[col] = df[col].astype('category')
             self.category_mappings[col] = dict(enumerate(df[col].cat.categories))
             self.category_mappings[f"{col}_inv"] = {v:k for k,v in self.category_mappings[col].items()}
             df[col] = df[col].cat.codes
 
-        # Date features
+
         df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
         df = df.dropna(subset=['Date'])
         df['Day'] = df['Date'].dt.day
@@ -284,7 +278,7 @@ class DataPreprocessor:
         df['Year'] = df['Date'].dt.year
         df['Month'] = df['Date'].dt.month
 
-        # Rolling features
+
         df = df.sort_values('Date')
         df['Rolling_7d'] = df.groupby('Product_Category')['Total_Purchases'].transform(
             lambda x: x.rolling(7, min_periods=1).mean().fillna(method='ffill')
@@ -312,15 +306,13 @@ class DataPreprocessor:
         return cluster_df
 
     def save_preprocessor(self):
-        # Remove heavy data before saving
+
         self._preprocessed_data = None
         self._X = None
         self._y = None
         joblib.dump(self, Config.PREPROCESSOR_PATH, compress=3)
 
-# -----------------------------
-# Trainer
-# -----------------------------
+
 class ModelTrainer:
     def __init__(self, preprocessor: DataPreprocessor):
         self.preprocessor = preprocessor
@@ -350,9 +342,7 @@ class ModelTrainer:
     def save_preprocessor(self):
         self.preprocessor.save_preprocessor()
 
-# -----------------------------
-# Insights Generator
-# -----------------------------
+
 class InsightsGenerator:
     def __init__(self, preprocessor: DataPreprocessor, trainer: ModelTrainer):
         self.preprocessor = preprocessor
@@ -396,9 +386,7 @@ class InsightsGenerator:
 
         return "\n".join(insights)
 
-# -----------------------------
-# Main Execution
-# -----------------------------
+
 if __name__ == "__main__":
     preprocessor = DataPreprocessor()
     trainer = ModelTrainer(preprocessor)

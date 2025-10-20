@@ -6,7 +6,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-# Load CSV once
+
 df = pd.read_csv("data.csv")
 df['Date'] = pd.to_datetime(df['Date'])
 
