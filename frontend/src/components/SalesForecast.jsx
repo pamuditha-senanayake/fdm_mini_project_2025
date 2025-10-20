@@ -13,7 +13,7 @@ function SalesForecast({ categories }) {
     setIsLoading(true);
     setResult("Processing forecast...");
     try {
-      const API_URL = "http://localhost:8000";
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const res = await axios.post(`${API_URL}/forecast`, { category, steps });
       const { forecast, trend, mae, rmse, accuracy_pct } = res.data;
 

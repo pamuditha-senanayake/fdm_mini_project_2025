@@ -28,7 +28,7 @@ function PromotionPredict({ categories, segments, shipping, payment, genders, in
     });
 
     try {
-      const API_URL = 'http://localhost:8000';
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const res = await axios.post(`${API_URL}/promotion`, payload);
       setResult(res.data.recommendation);
     } catch (err) {

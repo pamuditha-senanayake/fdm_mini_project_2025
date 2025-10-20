@@ -20,7 +20,7 @@ function SegmentPredictor({ incomeLevels }) {
     setError('');
     setResult(null);
     try {
-      const API_URL = 'http://localhost:8000';
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const response = await axios.post(`${API_URL}/api/predict-segment`, form);
       setResult(response.data);
     } catch (err) {
