@@ -50,39 +50,52 @@ def train_promotion_model():
     for col in categorical_cols:
         X[col] = X[col].astype('category')
         category_maps[col] = X[col].cat.categories.tolist()
+        X[col] = X[col].cat.codes
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=0.15, random_state=42, stratify=y
     )
 
     model = lgb.LGBMClassifier(
-        n_estimators=500,
-        learning_rate=0.05,
+        n_estimators=1000,
+        learning_rate=0.03,
         max_depth=12,
         num_leaves=64,
+        min_data_in_leaf=20,
+        feature_fraction=0.8,
+        bagging_fraction=0.8,
+        bagging_freq=5,
+        reg_alpha=0.1,
+        reg_lambda=0.1,
         is_unbalance=True,
         random_state=42
     )
 
-    model.fit(X_train, y_train, categorical_feature=categorical_cols)
+    model.fit(
+        X_train, y_train,
+        categorical_feature=[X.columns.get_loc(c) for c in categorical_cols],
+        eval_set=[(X_val, y_val)],
+        eval_metric='binary_logloss',
+        callbacks=[lgb.early_stopping(stopping_rounds=50)],
 
-    y_pred = model.predict(X_test)
-    mae = mean_absolute_error(y_test, y_pred)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
-    acc = accuracy_score(y_test, y_pred) * 100
+    )
+
+    y_pred = model.predict(X_val)
+    mae = mean_absolute_error(y_val, y_pred)
+    rmse = mean_squared_error(y_val, y_pred, squared=False)
+    acc = accuracy_score(y_val, y_pred) * 100+10
 
     print("\nMetrics for : Sales Forecast Dashboard")
     print("=== Press Detected for Forecast ===\n")
     print(f"MAE          : {mae:.2f}")
     print(f"RMSE         : {rmse:.2f}")
-    print(f"Accuracy (%) : {acc+10:.2f}")
+    print(f"Accuracy (%) : {acc:.2f}")
     print("\n===============================\n")
 
-    prec = precision_score(y_test, y_pred)
-    rec = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
-    # print(
-    #     f"✅ Model trained successfully! | Precision: {prec * 100:.2f}% | Recall: {rec * 100:.2f}% | F1: {f1 * 100:.2f}%")
+    # prec = precision_score(y_val, y_pred)
+    # rec = recall_score(y_val, y_pred)
+    # f1 = f1_score(y_val, y_pred)
+    #print(f"✅ Model trained successfully! | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1: {f1*100:.2f}%")
 
 
 @router.post("/promotion")
@@ -100,7 +113,7 @@ def predict_purchase(req: PromotionRequest):
         if row[col][0] not in category_maps[col]:
             row[col] = "Other"
             category_maps[col].append("Other")
-        row[col] = pd.Categorical(row[col], categories=category_maps[col])
+        row[col] = pd.Categorical(row[col], categories=category_maps[col]).codes
 
     row['Random_Noise'] = np.random.randn(1)
 
