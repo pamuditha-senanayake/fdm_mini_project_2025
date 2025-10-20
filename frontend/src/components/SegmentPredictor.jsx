@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { Markup } from 'interweave';
 
-// Reusing styles from other components for consistency
+
 const FormContainer = styled.div`
   background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 20px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); backdrop-filter: blur(12px);
@@ -76,7 +76,8 @@ function SegmentPredictor({ incomeLevels }) {
     setError('');
     setResult(null);
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+       const API_URL =  'http://localhost:8000';
       const response = await axios.post(`${API_URL}/api/predict-segment`, form);
       setResult(response.data);
     } catch (err) {

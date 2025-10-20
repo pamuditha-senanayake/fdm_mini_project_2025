@@ -194,7 +194,8 @@ function SalesForecast({ categories }) {
     setResult("Processing forecast...");
     try {
       // Use the environment variable for the API URL, falling back to localhost for development
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const API_URL = 'http://localhost:8000';
+      // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
       // Make the real API call to the backend
       const res = await axios.post(`${API_URL}/forecast`, { category, steps });
