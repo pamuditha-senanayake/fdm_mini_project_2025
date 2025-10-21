@@ -1,22 +1,18 @@
-# backend/components/stockpredict.py
+from fastapi import APIRouter, Body
+from pydantic import BaseModel
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from sklearn.metrics import mean_absolute_error, mean_squared_error
-from fastapi import APIRouter
-from pydantic import BaseModel
-
 
 df = pd.read_csv("data.csv")
 df['Date'] = pd.to_datetime(df['Date'])
 
 router = APIRouter()
 
-
 class ForecastRequest(BaseModel):
     category: str
     steps: int = 30
-
 
 @router.post("/forecast")
 def forecast_sales(request: ForecastRequest):
@@ -27,13 +23,18 @@ def forecast_sales(request: ForecastRequest):
     daily_sales = df_cat.groupby('Date')['Total_Amount'].sum()
     daily_sales.index = pd.DatetimeIndex(daily_sales.index, freq='D')
 
-    train = daily_sales[:-steps]
-    test = daily_sales[-steps:]
+    daily_sales_smooth = daily_sales.rolling(window=3, min_periods=1).mean()
+    train = daily_sales_smooth[:-steps]
+    test = daily_sales_smooth[-steps:]
 
-    model = SARIMAX(train, order=(1, 1, 1), seasonal_order=(1, 1, 1, 7))
+    train_log = np.log1p(train)
+    model = SARIMAX(train_log, order=(1,1,1), seasonal_order=(1,1,0,7),
+                    enforce_stationarity=False, enforce_invertibility=False)
     fit_model = model.fit(disp=False)
-    pred = fit_model.get_forecast(steps=steps)
-    pred_values = pred.predicted_mean
+
+    pred_log = fit_model.get_forecast(steps=steps).predicted_mean
+    pred_values = np.expm1(pred_log)
+    pred_values = np.clip(pred_values, 0, None)
 
     mae = mean_absolute_error(test, pred_values)
     rmse = np.sqrt(mean_squared_error(test, pred_values))
@@ -47,24 +48,17 @@ def forecast_sales(request: ForecastRequest):
     else:
         trend_text = "stable. Maintain current stock levels."
 
-    forecast_list = [f"{date.date()}: {round(value, 2)}" for date, value in zip(test.index, pred_values)]
-    output_text = {
-        "forecast": forecast_list,
-        "trend": trend_text,
-        # "mae": round(mae, 2),
-        # "rmse": round(rmse, 2),
-        # "accuracy_pct": round(accuracy_pct, 2)
+    # Prepare data for frontend graph
+    forecast_dict = {
+        "dates": [str(date.date()) for date in test.index],
+        "actual": test.tolist(),
+        "forecast": pred_values.tolist()
     }
 
-    print("\nMetrics for : Sales Forecast Dashboard")
-    print("=== Press Detected for Forecast ===\n")
-
-
-    print(
-        f"MAE          : {round(mae, 2)}\n"
-        f"RMSE         : {round(rmse, 2)}\n"
-        f"Accuracy (%) : {round(accuracy_pct, 2)}"
-    )
-    print("\n===============================\n")
-
-    return output_text
+    return {
+        "forecast_data": forecast_dict,
+        "trend": trend_text,
+        "mae": round(mae, 2),
+        "rmse": round(rmse, 2),
+        "accuracy_pct": round(accuracy_pct, 2)
+    }

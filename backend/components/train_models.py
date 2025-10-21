@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import List, Dict
 
 class Config:
-    DATA_PATH: str = "../../reports/data.csv"
+    DATA_PATH: str = "../data.csv"
     MODEL_PATH: str = "predictive_model.joblib"
     CLUSTER_MODEL_PATH: str = "clustering_model.joblib"
     PREPROCESSOR_PATH: str = "preprocessor.joblib"
@@ -129,7 +129,7 @@ class ModelTrainer:
         rmse = mean_squared_error(y_test, y_pred, squared=False)
         acc = accuracy_score(y_test, y_pred) * 100
 
-        print("\nMetrics for : Sales Forecast Dashboard")
+        print("\nMetrics for : Comprehensive Business Audit")
         print("=== Press Detected for Forecast ===\n")
         print(f"MAE          : {mae:.2f}")
         print(f"RMSE         : {rmse:.2f}")
@@ -140,7 +140,7 @@ class ModelTrainer:
         prec = precision_score(y_test, y_pred)
         rec = recall_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
-        print(f"✅ Model trained successfully! | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1: {f1*100:.2f}%")
+        print(f" Model trained successfully! | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1: {f1*100:.2f}%")
 
     def train_clustering_model(self):
         cluster_data = self.preprocessor.get_cluster_data()

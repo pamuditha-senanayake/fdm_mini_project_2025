@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Markup } from 'interweave';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
 import '../styles/SegmentPredictor.css';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function SegmentPredictor({ incomeLevels }) {
   const [form, setForm] = useState({ age: 35, income: incomeLevels[0], total_purchases: 5, amount: 250 });
@@ -27,6 +38,30 @@ function SegmentPredictor({ incomeLevels }) {
       setError(err.response?.data?.detail || "Prediction failed. Please check inputs and backend.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const chartData = result
+    ? {
+        labels: Object.keys(result.probabilities),
+        datasets: [
+          {
+            label: 'Probability',
+            data: Object.values(result.probabilities).map(p => p * 100),
+            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+          },
+        ],
+      }
+    : null;
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Segment Prediction Probabilities (%)' },
+    },
+    scales: {
+      y: { beginAtZero: true, max: 100 }
     }
   };
 
@@ -65,16 +100,15 @@ function SegmentPredictor({ incomeLevels }) {
           <p className="error-text">{error}</p>
         </div>
       )}
+
       {result && (
         <div className="output">
           <h3>Prediction Result</h3>
           <p><strong>Predicted Segment:</strong> {result.predicted_segment}</p>
+
           <h3>Prediction Confidence</h3>
-          <ul>
-            {Object.entries(result.probabilities).map(([segment, prob]) => (
-              <li key={segment}>{segment}: {(prob * 100).toFixed(2)}%</li>
-            ))}
-          </ul>
+          <Bar data={chartData} options={chartOptions} />
+
           <h3>Marketing Recommendation</h3>
           <p>{result.recommendation}</p>
         </div>

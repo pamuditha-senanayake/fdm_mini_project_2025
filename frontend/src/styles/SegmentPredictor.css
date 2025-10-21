@@ -9,6 +9,7 @@
   width: 100%;
   margin: 40px auto;
   z-index: 2;
+    max-height: 1200px;!important;
   position: relative;
 }
 
@@ -135,6 +136,7 @@
   border-radius: 15px;
   border: 1px solid rgba(255, 217, 102, 0.2);
   text-align: left;
+    max-height: 500px; !important;
 }
 
 .output h3 {
@@ -155,3 +157,6 @@
 .error-text {
   color: #FF5F6D;
 }
+
+
+

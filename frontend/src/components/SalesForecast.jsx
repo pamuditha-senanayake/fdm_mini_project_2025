@@ -1,82 +1,117 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from "chart.js";
 import "../styles/SalesForecast.css";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function SalesForecast({ categories }) {
   const [category, setCategory] = useState(categories[0] || "");
   const [steps, setSteps] = useState(30);
-  const [result, setResult] = useState(null);
+  const [forecastData, setForecastData] = useState(null);
+  const [trend, setTrend] = useState("");
+  const [metrics, setMetrics] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setResult("Processing forecast...");
+    setForecastData(null);
+    setMetrics(null);
+
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
       const res = await axios.post(`${API_URL}/forecast`, { category, steps });
-      const { forecast, trend, mae, rmse, accuracy_pct } = res.data;
 
+      // Chart data
+      setForecastData(res.data.forecast_data);
 
-      setResult(
-        `Forecast for ${category} (${steps} days):\n${forecast.join(
-          "\n"
-        )}
-          \n\nTrend Insight: ${trend}\n `
-          // MAE: ${mae}, RMSE: ${rmse}, Accuracy: ${accuracy_pct}%`
-      );
+      // Trend insight
+      setTrend(res.data.trend);
 
-
+      // Metrics
+      setMetrics({
+        mae: res.data.mae,
+        rmse: res.data.rmse,
+        accuracy: res.data.accuracy_pct,
+      });
     } catch (err) {
       console.error("API call failed:", err);
-      setResult(
-        "Error fetching forecast. Please ensure the backend is running and reachable."
-      );
     } finally {
       setIsLoading(false);
     }
   };
 
+  const chartData = forecastData
+    ? {
+        labels: forecastData.dates,
+        datasets: [
+          {
+            label: "Actual Sales",
+            data: forecastData.actual,
+            borderColor: "#3b82f6",
+            backgroundColor: "#3b82f6",
+            tension: 0.2,
+          },
+          {
+            label: "Forecasted Sales",
+            data: forecastData.forecast,
+            borderColor: "#f59e0b",
+            backgroundColor: "#f59e0b",
+            borderDash: [5, 5],
+            tension: 0.2,
+          },
+        ],
+      }
+    : null;
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      title: { display: true, text: `Sales Forecast for ${category}` },
+    },
+    scales: {
+      y: { beginAtZero: true },
+    },
+  };
+
   return (
     <div className="app-container">
-      <div
-        className="blob"
-        style={{ top: "-20%", left: "-10%", width: "400px", height: "400px" }}
-      />
-      <div
-        className="blob"
-        style={{
-          bottom: "-20%",
-          right: "-10%",
-          width: "500px",
-          height: "500px",
-          animationDelay: "5s",
-        }}
-      />
       <div className="form-container">
         <h2 className="title">📈 Sales Forecast Dashboard</h2>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="category-select" className="styled-label">
-            Product Category
-          </label>
-          <div className="select-container">
-            <select
-              id="category-select"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="select"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
+          <label htmlFor="category-select" className="styled-label">Product Category</label>
+          <select
+            id="category-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="select"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
 
-          <label htmlFor="steps-input" className="styled-label">
-            Forecast Days
-          </label>
+          <label htmlFor="steps-input" className="styled-label">Forecast Days</label>
           <input
             id="steps-input"
             type="number"
@@ -90,12 +125,21 @@ function SalesForecast({ categories }) {
           </button>
         </form>
 
-        {result &&
-            <div className="output">
-                {result}
-            </div>
-        }
+        {forecastData && (
+          <div className="output">
+            <Line data={chartData} options={chartOptions} />
+            <p style={{ marginTop: "10px" }}><strong>Trend Insight:</strong> {trend}</p>
 
+            {metrics && (
+              <p style={{ marginTop: "10px" }}>
+                <strong>Metrics:</strong> <br />
+                MAE: {metrics.mae} <br />
+                RMSE: {metrics.rmse} <br />
+                Accuracy: {metrics.accuracy}%
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
