@@ -92,11 +92,6 @@ def train_promotion_model():
     print(f"Accuracy (%) : {acc:.2f}")
     print("\n===============================\n")
 
-    # prec = precision_score(y_val, y_pred)
-    # rec = recall_score(y_val, y_pred)
-    # f1 = f1_score(y_val, y_pred)
-    #print(f"✅ Model trained successfully! | Precision: {prec*100:.2f}% | Recall: {rec*100:.2f}% | F1: {f1*100:.2f}%")
-
 
 @router.post("/promotion")
 def predict_purchase(req: PromotionRequest):
